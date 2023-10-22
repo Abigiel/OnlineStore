@@ -1,6 +1,7 @@
 package com.pluralsight;
 
 public class Product {
+
     private String sku;
     private String name;
     private String department;
@@ -30,6 +31,23 @@ public class Product {
     public String getDepartment() {
         return department;
     }
+
+    public void setSku(String sku) {
+        this.sku = sku;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
 
     @Override
     public String toString() {
