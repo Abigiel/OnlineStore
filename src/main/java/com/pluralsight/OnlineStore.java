@@ -3,123 +3,94 @@ package com.pluralsight;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.SQLOutput;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
 public class OnlineStore {
+     static HashMap<String, String> inventory = new HashMap<String, String>();
 
-static HashMap<String, Product> inventory = new HashMap<String, Product>();
+    public static void main(String[] args) {
 
-public static void main(String[] args) {
-//    Scanner newScanner = new Scanner(System.in);
-//    System.out.println("Welcome! \nPlease select one of the options below:");
-//    System.out.println("()");
+        int choice;
+        char repeat;
+        do {
+            Scanner newScanner = new Scanner(System.in);
+            System.out.println("Welcome! \nPlease select one of the options below: \n 1. Display Products.");
+            choice = newScanner.nextInt();
 
-//    try {
-//
-//        BufferedReader buffReader = new BufferedReader(new FileReader("src/main/resources/products.csv")); // insert reader to read file
-//
-//        String input = buffReader.readLine();
-//        while ((input = buffReader.readLine()) != null) {
-//            String[] details = input.split("\\|"); // split using delimiter to create array
-//            String sku = details[0];
-//            String name = details[1];
-//            double price = Double.parseDouble(details[2]);
-//            String department = details[3];
-//            Product p = new Product(sku, name, price, department); // use declared values to create object
-//            //SKU|Product Name|Price|Department
-//
-//
-//            if (name != null){     // use loop to add all values to HashMap
-//                inventory.put("name", p);
-//                for (Map.Entry<String, Product> value : inventory.entrySet()) {
-//                    System.out.println(value.getValue());
-//                    // System.out.println(value.getKey());
-//                    //System.out.println(inventory.get("Desktop PC Computer Intel Core i5"));
-//                    //System.out.println("id:"+value.get() );
-//                    break;
-//            }
-//            } else {
-//                System.out.println("Invalid input.");
-//            }
-//        }
-//
-//        buffReader.close();              // close BufferedReader
-//
-//    } catch (IOException e) {
-//        e.printStackTrace();
-//    }
+            switch (choice) {
+                case 1:
+                    displayProducts();
+                    break;
+                default:
+            }
+            System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+            System.out.println("Do you want to continue? Y or N");
+            Scanner repeatScanner = new Scanner(System.in);
+            repeat = repeatScanner.nextLine().charAt(0);
+        }while(repeat=='Y' || repeat=='y');
+    }
 
 
-//
-//    while(true) {                                        // loop to search as many times as needed
-//
-//                Scanner myScanner = new Scanner(System.in);
-//                System.out.println("What item # are you interested in?");       //prompt user for input
-//
-//                String name = myScanner.nextLine();
-//                Product matchedProduct = inventory.get(name);                     //assign key used for search to variable
-//                if (matchedProduct == null) {                                   //condition for nonexistent key
-//                    System.out.println("We don't carry that product");
-//                    return;
-//                }
-//                System.out.printf("We carry a %s and the price is $%.2f", matchedProduct.getName(), matchedProduct.getPrice());
-//
-//
-//                Scanner scan = new Scanner(System.in);
-//                System.out.println("\nDo you want to search again?");              //prompt user to check if search should run again
-//                String answer = scan.nextLine();
-//                if (answer.equalsIgnoreCase("yes")) {
-//                    continue;
-//                } else if (answer.equalsIgnoreCase("no")) {
-//                    System.exit(0);
-//                } else {
-//                    System.out.println("Invalid response. Answer yes or no.");
-//                }
-//
-//            }
+    public static void displayProducts() {
 
-        }
+        StringBuilder result = null;
+        String sku, name, department;
+        double price;
+        BufferedReader buffReader = null;
 
-    public String displayProducts(){
         try {
+             buffReader = new BufferedReader(new FileReader("src/main/resources/products.csv")); // insert reader to read file
+             String input;// = buffReader.readLine();
 
-            BufferedReader buffReader = new BufferedReader(new FileReader("src/main/resources/products.csv")); // insert reader to read file
-
-            String input = buffReader.readLine();
             while ((input = buffReader.readLine()) != null) {
+
                 String[] details = input.split("\\|"); // split using delimiter to create array
-                String sku = details[0];
-                String name = details[1];
-                double price = Double.parseDouble(details[2]);
-                String department = details[3];
-                Product p = new Product(sku, name, price, department); // use declared values to create object
+
+                sku = details[0];
+                name = details[1];
+                price = Double.parseDouble(details[2]);
+                department = details[3];
+
+                Product p = new Product(sku, name, price, department);
                 //SKU|Product Name|Price|Department
 
-
-                if (name != null){     // use loop to add all values to HashMap
-                    inventory.put("name", p);
-                    for (Map.Entry<String, Product> value : inventory.entrySet()) {
-                        System.out.println(value.getValue());
-                        // System.out.println(value.getKey());
-                        //System.out.println(inventory.get("Desktop PC Computer Intel Core i5"));
-                        //System.out.println("id:"+value.get() );
-                        break;
+                if ( p.getName() != null) {     // use loop to add all values to HashMap
+                    inventory.put(p.getName(), p.toString());// name, sku name price departmn
+                    /*for (Map.Entry<String, Product> value : inventory.entrySet()) {
+//                        result = new StringBuilder();
+//                        result.append("SKU: ").append(value.getValue().getSku());
+//                        result.append(" Name: ").append(value.getValue().getName());
+//                        result.append(" Price: ").append(value.getValue().getPrice());
+//                        result.append(" Department: ").append(value.getValue().getDepartment());
+//                        result.append("\n");
+*/
+                  //  System.out.println(value.getValue());
                     }
-                } else {
-                    System.out.println("Invalid input.");
+                 else {
+                    continue;
+                    //System.out.println("Invalid input.");
                 }
+
             }
 
-            buffReader.close();              // close BufferedReader
+            } catch (IOException e) {
+                 e.printStackTrace();
+             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        inventory.forEach((key, value) -> { //lamda expresion at what java version was LE introduced ?
+            System.out.println("________________________________________________________________________________");
+            System.out.println(value);
+            System.out.println("________________________________________________________________________________");
+        });
+        //return inventory;
 
     }
-    }
+
+}
 
 
 
